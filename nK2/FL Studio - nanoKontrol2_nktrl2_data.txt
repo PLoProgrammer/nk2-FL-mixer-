@@ -1,0 +1,81 @@
+Rebuild the Korg nanoKontrol2 as software classes
+==================================================
+
+Transport Buttons:
+------------------
+TP_Common=14 #Midi Channel=14 optional [1-16, Global]
+Track Rew:  Type=CC [Note,no Assign] Behavior=Momentary[Toggel] CC/Note=0 Off=64 On=63
+Track FF:  Type=CC [Note,no Assign] Behavior=Momentary[Toggel] CC/Note=0 Off=64 On=65
+Cycle:  Type=Note [CC,no Assign] Behavior=Momentary[Toggel] CC/Note=D#0 Off=0 On=2
+Set:  Type=Note [CC,no Assign] Behavior=Momentary[Toggel] CC/Note=A1 Off=0 On=2
+Marker Rew:  Type=CC [Note,no Assign] Behavior=Momentary[Toggel] CC/Note=35 Off=64 On=63
+Marker FF:  Type=CC [Note,no Assign] Behavior=Momentary[Toggel] CC/Note=35 Off=64 On=65
+Transport Rew:  Type=Note [CC,no Assign] Behavior=Momentary[Toggel] CC/Note=C#0 Off=0 On=2
+Transport FF:  Type=Note [CC,no Assign] Behavior=Momentary[Toggel] CC/Note=D0 Off=0 On=2
+Transport Stop:  Type=Note [CC,no Assign] Behavior=Momentary[Toggel] CC/Note=B-1 Off=0 On=2
+Transport Play:  Type=Note [CC,no Assign] Behavior=Momentary[Toggel] CC/Note=A#-1 Off=0 On=2
+Transport Rec:  Type=Note [CC,no Assign] Behavior=Momentary[Toggel] CC/Note=C0 Off=0 On=2
+
+Control the mixer in FL with nanoKontrol2
+Class TNK_Control:
+With Knob(0-127) 1-8 control Panning(default), Slider(0-127) 1-8 Volume(default)  
+s=not/solo m=un/mute r=stop/record (1-8)
+Transport:
+Track< = 8er-Bereich nach links im Mixer , Track> = 8er-Bereich nach rechts
+Marker<= 1 nach links im Mixer, Marker>= 1 nach rechts
+Rest = offen
+nanoKontrol-Tabelle:
+
+This are the Values from "FL Studio - nanoKONTROL2.nktrl2_data" -Template
+--------------------------------------------------------------------------
+LED: Global Midi-C=1 Control-Mode=CC LED-Mode=External [Internal]
+Group Common 1-8: Midi Channel=Global [1-16]
+
+Knob 1-8: Enabel=Enable [Disabel], left Value=0 - right Value=127
+Knob 1: CC Number=0 
+Knob 2: CC Number=1
+Knob 3: CC Number=2
+Knob 4: CC Number=3
+Knob 5: CC Number=4
+Knob 6: CC Number=5
+Knob 7: CC Number=6
+Knob 8: CC Number=7
+
+Slider 1-8: Enabel=Enable [Disabel], low Vallue=0 - upper Value=127
+Slider 1: CC Number=36
+Slider 2: CC Number=37
+Slider 3: CC Number=38
+Slider 4: CC Number=39
+Slider 5: CC Number=40
+Slider 6: CC Number=41
+Slider 7: CC Number=42
+Slider 8: CC Number=43   
+
+Solo Button 1-8: Assign Type=Note [ControChange, no Assign], Button Behavior=Momentary [Toggel], Off Value=0 On Value=127
+Solo Button 1: Note Number [CC]= C-1 (0)
+Solo Button 2: Note Number [CC]= C#-1 (1)
+Solo Button 3: Note Number [CC]= D-1 
+Solo Button 4: Note Number [CC]= D#-1
+Solo Button 5: Note Number [CC]= E-1
+Solo Button 6: Note Number [CC]= F-1
+Solo Button 7: Note Number [CC]= F#-1
+Solo Button 8: Note Number [CC]= G-1 (7)
+Mute Button 1-8: Assign Type=Note [ControChange, no Assign], Button Behavior=Momentary [Toggel], Off Value=0 On Value=127
+Solo Button 1: Note Number [CC]= C2 (36)
+Solo Button 2: Note Number [CC]= C#2
+Solo Button 3: Note Number [CC]= D2
+Solo Button 4: Note Number [CC]= D#2
+Solo Button 5: Note Number [CC]= E2
+Solo Button 6: Note Number [CC]= F2
+Solo Button 7: Note Number [CC]= F#2
+Solo Button 8: Note Number [CC]= G2 (43)
+Rec Button 1-8: Assign Type=Note [ControChange, no Assign], Button Behavior=Momentary [Toggel], Off Value=0 On Value=127
+Rec Button 1: Note Number [CC]= C5 (72)
+Rec Button 2: Note Number [CC]= C#5
+Rec Button 3: Note Number [CC]= D5
+Rec Button 4: Note Number [CC]= D#5
+Rec Button 5: Note Number [CC]= E5
+Rec Button 6: Note Number [CC]= F5
+Rec Button 7: Note Number [CC]= F#5
+Rec Button 8: Note Number [CC]= G5 (79)
+
