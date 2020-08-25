@@ -5,7 +5,7 @@ Hello folks, I have now also written a program for the Korg nanoKontrol2 (nK2) w
 * own Korg Kontrol Editor-Mappinge-File: FL Studio - nK2_Knob1-8.nktrl2_data
   copy it to ..\FL-Studio\System\Hardware specific\Korg nanoKONTROL 2\
   Load it in Korg Kontrol Editor and write Data to nanoKontrol2-device Communication\Write Scene Data
-* You can control the Master-Mixer-Chanel (Id=0)
+* You can control the Master-MixerTrack (Id=0)
 
 The program assigns the 8 control groups of the nK2, each matching mixer tracks. This means that the Solo button switches the assigned mixer track to solo [on / off].
 Mute = mute, Rec = Arm disk recording. The rotary knob controls the panning, the slide control the volume.
@@ -35,7 +35,7 @@ This is the script that you have to assign to the nanoKntrol2 in the midi settin
 	lsSPT_Values ​​= [1,2,4,10,16,20,25,50]: These are the step sizes that can be set with [set]. You can choose these as long as the Python List syntax is correct.
 		Some examples are given in userPara.py. Only one list should be active at a time. Please comment out all others with #.
 
-FL Studio - nK2_Knob1-8.nktrl2_data: Mapping-File for Korg Kontrol Editor
+<b>FL Studio - nK2_Knob1-8.nktrl2_data</b>: Mapping-File for Korg Kontrol Editor
 
 In addition, the subdirectory ... \ nK2 contains other files that have nothing to do with the script but are intended to serve as information.
 	Info_ger.txt \ Info_eng.txt this file in German or English
