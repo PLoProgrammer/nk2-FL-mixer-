@@ -2,10 +2,12 @@
 Hello folks, I have now also written a program for the Korg nanoKontrol2 (nK2) with which the mixer (possibly more later) can be operated.
 
 <b>Changes in Version 1.2</b>
+* Version 1.2 is more performant and button conflict has been resolved.
 * own Korg Kontrol Editor-Mappinge-File: FL Studio - nK2_Knob1-8.nktrl2_data
   copy it to ..\FL-Studio\System\Hardware specific\Korg nanoKONTROL 2\
   Load it in Korg Kontrol Editor and write Data to nanoKontrol2-device Communication\Write Scene Data
 * You can control the Master-MixerTrack (Id=0)
+* testing.py is no longer available.
 
 The program assigns the 8 control groups of the nK2, each matching mixer tracks. This means that the Solo button switches the assigned mixer track to solo [on / off].
 Mute = mute, Rec = Arm disk recording. The rotary knob controls the panning, the slide control the volume.
