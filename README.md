@@ -39,7 +39,7 @@ This is the script that you have to assign to the nanoKntrol2 in the midi settin
 
 <b>FL Studio - nK2_Knob1-8.nktrl2_data</b>: Mapping-File for Korg Kontrol Editor
 
-In addition, the subdirectory ... \ nK2 contains other files that have nothing to do with the script but are intended to serve as information.
+In addition, the subdirectory ... \ info contains other files that have nothing to do with the script but are intended to serve as information.
 	Info_ger.txt \ Info_eng.txt this file in German or English
 	FL Studio - nanoKontrol2_nktrl2_data.txt 						Values ​​of the mapping file, as text
 	Korg Kontrol Editor - FL Studio - nK2_Knob1-8.nktrl2_data.png	Values ​​of the mapping file, as an image
