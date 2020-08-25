@@ -2,7 +2,6 @@
 #
 import midi
 import utils
-from nK2.testing import *
 """
 Rebuild the Korg nanoKontrol2 as software classes
 ==================================================
@@ -15,10 +14,12 @@ Glob_Midi_CH = 1 #Control_Groups can have Midi-Channel (1-16) or global, ist set
 Midi_Not = 0 #Button is not enabel, No Assign (Button-State[No Assign, Control Change, Note])
 B_Enable = True #Regulator is enable
 B_Disable = False
+Nenable=['Enable','Disable']
 Typ_But = 1
 Typ_Knob = 2 #Regulator is a Knob
 Typ_Slider= 3 #Regulator is a Slider
 Reg_Typ = [Typ_Knob, Typ_Slider]
+TypeName = ['No_Typ','Typ_But','Typ_Knob','Typ_Slider']
 LED_Int = 0 #Internal LED-Mode
 LED_Ext = 1 #External LED-Mode
 LED_Mode = [LED_Int, LED_Ext]
@@ -31,7 +32,6 @@ Knob_RightValue = 127 # High Value of Knob
 Slider_LowerValue = 0 # Low Value of Slider
 Slider_UpperValue = 127 # High Value of Slider
 
-#Count_OMM = 0#Counter for OnMidiMsg
 Last_Data = [0,""]
 
 # Transport Section
@@ -48,12 +48,13 @@ class TNK_Button:
 		self.CC_NN = CC_Note_Nummber
 		self.offV= offValue
 		self.onV = onValue
-		print__init(self.name)
 		
 	#Check Note or CC -event and CC/Note-Nr
 	def identifyMe(self):
 		list = [self.AT,self.CC_NN,self.onV] #in some casse checkt OnValue
 		return list
+	def printMe(self):
+		print(self.name,": Interne-ID("+str(self.idx)+"), "+TypeName[self.Type]+", AssignType("+str(self.AT)+")-Nr.="+str(self.CC_NN)+", Behavior="+self.BB+", On="+str(self.onV)+", Off="+str(self.offV))
 		
 class  TNK_Regulator:
 # Class for Knob and Slider
@@ -66,15 +67,16 @@ class  TNK_Regulator:
 		self.CC = CC_Nummber
 		self.lowV= lowValue
 		self.highV = highValue
-		print__init(self.name)
 
 	#Check Note or CC -event and CC/Note-Nr
 	def identifyMe(self):
 		list = [midi.MIDI_CONTROLCHANGE,self.CC,self.highV]
 		return list
+	def printMe(self):
+		print(self.name,": Interne-ID("+str(self.idx)+"), "+TypeName[self.Type]+", "+Nenable[self.enable]+", CC-Nr.="+str(self.CC)+", Low="+str(self.lowV)+", High="+str(self.highV))
 
 #Control group
-class TTNK_Control_group:
+class TNK_Control_group:
 # Group of 3 Buttons (Solo,Mute,Rec), a Knob and a Slider.
 #	Have a name, Index and a Midi-Channel
 	def __init__(self,idx,name,nr,midiChannel,soloButton,muteButton,recButton,knob,slider):
@@ -87,7 +89,9 @@ class TTNK_Control_group:
 		self.rBut = recButton
 		self.knob = knob
 		self.slider = slider
-		print__init(self.name)
+
+	def printMe(self):
+		print(self.name,": Interne-ID("+str(self.idx)+"), Nr:"+str(self.Nr)+self.sBut.printMe()+self.mBut.printMe()+self.rBut.printMe()+self.knob.printMe()+self.slider.printMe())
 
 
 class TCommon_LED:
@@ -102,7 +106,6 @@ class TCommon_LED:
 		self.globChannel = globalMidiChannel # set the global-Midi-Channel 
 		self.controlMode =controlMode
 		self.LED= modeLED
-		print__init(self.name)
 		
 	def getGlobMidiChannel(self):
 		return self.globChannel
@@ -133,11 +136,7 @@ class TNK_Control:
 		self.ConGroup06 = ConGroup06
 		self.ConGroup07 = ConGroup07
 		self.ConGroup08 = ConGroup08
-		print__init(self.name)
 
-		#Count_OMM = 0 #Counter for OnMidiMsg
-		#Last_EV2_Value = 0
-		Last_Data = [0,""]
 #=========== END of Class def ===========
 
 #=========== Funktionen ===========
@@ -146,54 +145,14 @@ class TNK_Control:
 		
 	def identifyObj(self,FoundButton,event,obj):
 	#Determine which button / knob / slider was pressed and assign it to the corresponding class
-	#Warning: I cannot differentiate whether Knob 01 was operated with the values ​​63-65 or Track rew or Track FF because they have the same values.: 	
-		global Last_Data
-		print__funClass(obj.name+".identifyObj(...)")
-
-		if FoundButton[0]==False:
-			#Marker Rew & FF
-			if event.midiId == midi.MIDI_CONTROLCHANGE and (event.data1 == 35):
-				if event.midiId == obj.identifyMe()[0] and event.data1 == obj.identifyMe()[1] and event.data2 == obj.identifyMe()[2]: #Rew or FF
-					FoundButton=[True,obj.name,obj.idx,event.data1,event.data2]
-					Last_Data=event.data2,FoundButton[1]
-					return FoundButton
-				else: #if not first (Rew or FF) Break and try next
-					FoundButton = [False,"",0,0,0]
-					return FoundButton
-			
-			#Track Rew & FF or Knob 1
-			if event.midiId == midi.MIDI_CONTROLCHANGE and (event.data1 == 0):
-				if event.midiId == obj.identifyMe()[0] and event.data1 == obj.identifyMe()[1] and (event.data2<63 or event.data2>65): #Knob 1
-					if (obj.name=="TP Track Rew" or obj.name=="TP Track FF"):
-						FoundButton = [False,"",0,0,0]
-						return FoundButton
-					else:
-						#print("Knob 01 <63 or >65",event.data2)
-						FoundButton=[True,obj.name,obj.idx,event.data1,event.data2]
-						Last_Data=event.data2,FoundButton[1]
-						return FoundButton
-				else:
-					#Track Rew & FF data2=63-65
-					if event.midiId == obj.identifyMe()[0] and event.data1 == obj.identifyMe()[1] and event.data2 == obj.identifyMe()[2] and Last_Data[1]!="TNK_Regulator: Knob 01" and (obj.name=="TP Track Rew" or obj.name=="TP Track FF"): 
-						FoundButton=[True,obj.name,obj.idx,event.data1,event.data2]
-						Last_Data=event.data2-Last_Data[0],FoundButton[1]
-						return FoundButton
-					elif event.midiId == obj.identifyMe()[0] and event.data1 == obj.identifyMe()[1] and Last_Data[1]=="TNK_Regulator: Knob 01" and (obj.name!="TP Track Rew" and obj.name!="TP Track FF") and abs(event.data2-Last_Data[0])==1: #event.data2!=Last_Data[0]: #Knob 1 data2=63-65
-						#print("Wohl doch Knob 01",event.data2)
-						FoundButton=[True,obj.name,event.data1,event.data2] #"TNK_Regulator: Knob 01"
-						Last_Data=event.data2,FoundButton[1]
-						return FoundButton
-					else:
-						FoundButton = [False,"",0,0,0]
-						return FoundButton
-
-			if event.midiId == obj.identifyMe()[0] and event.data1 == obj.identifyMe()[1] and event.data1 != 35:
-				FoundButton=[True,obj.name,obj.idx,event.data1,event.data2]
-				Last_Data=event.data2,FoundButton[1]
+		#for monentrary (2MIDI-Events down/up, CC with 2 Values, i only want On-Value [Note have must only one Value,TP-Buttons]
+		if event.midiId == obj.identifyMe()[0] and event.data1 == obj.identifyMe()[1] and event.data2 == obj.identifyMe()[2]: 
+			FoundButton=[True,obj.name,obj.idx,event.data1,event.data2]
+			return FoundButton
+		#first Knob have Id=3 daher nun and obj.identifyMe()[1]>3
+		if event.midiId == obj.identifyMe()[0] and event.data1 == obj.identifyMe()[1] and obj.identifyMe()[1]>3: FoundButton=[True,obj.name,obj.idx,event.data1,event.data2]
+		else: FoundButton = [False,"",0,0,0]
 		
-			if FoundButton[0]: 
-				Last_Data=event.data2,FoundButton[1]
-			
 		return FoundButton
 
 		
